@@ -1,18 +1,25 @@
 const mongoose = require('mongoose')
 
 const userShcemas = mongoose.Schema({
-    name : {
+    name: {
         type: String
     },
-    email :{
+    email: {
         type: String,
-        unique:true
+        unique: true
     },
-    password :{
+    password: {
         type: String
     },
-    profile :{
+    profile: {
         type: String
+    },
+    role: {
+        type: String
+    },
+    valider: {
+        type: Boolean,
+        default: false
     }
 })
 

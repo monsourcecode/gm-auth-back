@@ -12,6 +12,9 @@ module.exports.Login = async (req, res) => {
     if (!user) {
         return res.send({error: true, msg: 'email not exist'})
     }
+    if (user.valider == false) {
+        return res.send({error: true, msg: 'Votre compte .....'})
+    }
     //check if the password is correct
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
@@ -29,12 +32,26 @@ module.exports.Login = async (req, res) => {
     }
     return res.send({error: false, data: data})
 }
-
+module.exports.Valider = (req, res) => {
+    const id = req.body.id;
+    User.updateOne({
+        '_id': id
+    }, {
+        '$set': {
+            valider: true
+        }
+    }).then(r => {
+        res.send('ok')
+    }).catch(err => {
+        res.send('not ok')
+    })
+}
 module.exports.SignUp = async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
     const profile = req.body.profile;
+    const type = req.body.type;
 
     const user = await User.findOne({email: email}).exec();
     console.log(user)
@@ -46,6 +63,7 @@ module.exports.SignUp = async (req, res) => {
     const userToSave = new User();
     userToSave.name = name;
     userToSave.email = email;
+    userToSave.type = type
     userToSave.password = await bcrypt.hash(password, code);
     userToSave.profile = profile
     userToSave.save()
