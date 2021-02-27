@@ -101,10 +101,17 @@ module.exports.Uplaod = (req, res) => {
 module.exports.UplaodWithData = (req, res) => {
     console.log(req.files)
     console.log(req.body)
+
     if (!req.files) {
         return res.send({error: true, mas: 'files not sended !'})
     }
     const file = req.files.file;
+    if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpeg') {
+        return res.send({error: true, mas: 'File not allowed !'})
+    }
+    if (file.size > 10) {
+        return res.send({error: true, mas: 'File size too big !'})
+    }
     if (!file) {
         return res.send({error: true, mas: 'File not sended !'})
     }
